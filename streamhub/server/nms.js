@@ -59,6 +59,16 @@ nms.on('prePublish', async (id, StreamPath, args) => {
     session.reject();
     console.log(`Stream Rejected: invalid streamKey (${streamKey})`);
   } else {
+    await Stream.findOneAndUpdate(
+      { user: user._id },
+      { 
+        user: user._id,
+        title: "Live Stream",
+        startedAt: new Date(),
+        isLive: true 
+      },
+      { upsert: true, new: true }
+    );
     console.log(`Stream Accepted: ${user.username} (${streamKey})`);
   }
 });

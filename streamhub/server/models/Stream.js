@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
+const streamSchema = new mongoose.Schema({
     title:{
         type: String,
         required: true,
@@ -12,10 +12,9 @@ const userSchema = new mongoose.Schema({
     },
 
     user:{
-        type:String,
-        required:true,
-        unique:true,
-        trim:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',                         
+        required: true
     },
 
     startedAt:{
@@ -26,9 +25,15 @@ const userSchema = new mongoose.Schema({
     isLive:{
         type:Boolean,
         default:false
+    },
+    streamKey: {
+    type: String,
+    required: true,
+    unique: true,
+    trim: true
     }
 
 
 });
 
-export default mongoose.model('Stream', userSchema);
+export default mongoose.model('Stream', streamSchema);

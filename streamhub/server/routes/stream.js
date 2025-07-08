@@ -22,7 +22,8 @@ router.post("/start" ,verifyToken, async (req, res) => {
                 user: req.user.id,
                 title: req.body.title || "Untitled Stream",
                 startedAt: new Date(),
-                isLive: true
+                isLive: true,
+                streamKey: user.streamKey
         });
 
         await stream.save();

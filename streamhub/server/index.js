@@ -5,6 +5,7 @@ import { connectDB } from './db.js';
 import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile.js';
 import streamRoutes from './routes/stream.js';
+import streamKeyRoutes from './routes/stream-key.js';
 
 dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use('/api', profileRoutes);
 app.use('/api',authRoutes);
 app.use('/api', streamRoutes);
+app.use('/api', streamKeyRoutes);
 
 connectDB();
 
