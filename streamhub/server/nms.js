@@ -1,4 +1,10 @@
+import 'dotenv/config';
+import {connectDB} from './db.js';
+await connectDB();
+import User from './models/User.js';
 import NodeMediaServer from 'node-media-server';
+import mongoose from 'mongoose';
+
 
 
 const config = {
@@ -27,7 +33,22 @@ const config = {
   },
 };
 
-const nms = new NodeMediaServer(config, { logType: 3 });
+const nms = new NodeMediaServer(config);
+
+nms.on('prePublish', async (id, StreamPath, args) => {
+  const streamKey = StreamPath.split('/')[2];
+  console.log('Gelen streamKey:', streamKey);
+  const user = await User.findOne({ streamKey });
+  console.log('Bulunan user:', user);
+  if (!user) {
+    const session = nms.getSession(id);
+    session.reject();
+    console.log(`Stream Rejected: invalid streamKey (${streamKey})`);
+  } else {
+    console.log(`Stream Accepted: ${user.username} (${streamKey})`);
+  }
+});
+
 nms.run();
 
 export default nms;
