@@ -2,6 +2,7 @@ import 'dotenv/config';
 import {connectDB} from './db.js';
 await connectDB();
 import User from './models/User.js';
+import Stream from './models/Stream.js';
 import NodeMediaServer from 'node-media-server';
 import mongoose from 'mongoose';
 
@@ -37,9 +38,22 @@ const nms = new NodeMediaServer(config);
 
 nms.on('prePublish', async (id, StreamPath, args) => {
   const streamKey = StreamPath.split('/')[2];
-  console.log('Gelen streamKey:', streamKey);
-  const user = await User.findOne({ streamKey });
-  console.log('Bulunan user:', user);
+  console.log('streamKey:', streamKey);
+
+
+  const user = await User.findOneAndUpdate(
+    { streamKey },
+    { isLive: true },
+    { new: true }
+  );
+  console.log('Finded user:', user);
+
+ 
+  await Stream.findOneAndUpdate(
+    { streamKey },
+    { isLive: true }
+  );
+
   if (!user) {
     const session = nms.getSession(id);
     session.reject();
@@ -47,6 +61,23 @@ nms.on('prePublish', async (id, StreamPath, args) => {
   } else {
     console.log(`Stream Accepted: ${user.username} (${streamKey})`);
   }
+});
+
+
+nms.on('donePublish', async (id, StreamPath, args) => {
+  const streamKey = StreamPath.split('/')[2];
+
+  await User.findOneAndUpdate(
+    { streamKey },
+    { isLive: false }
+  );
+
+  await Stream.findOneAndUpdate(
+    { streamKey },
+    { isLive: false }
+  );
+
+  console.log(`Stream ended for streamKey: ${streamKey}`);
 });
 
 nms.run();

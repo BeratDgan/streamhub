@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema({
     },
     
     isLive:{
-        type:Boolean
+        type:Boolean,
+        default:false
     }
 
 
