@@ -8,7 +8,7 @@ const router = Router();
 
 
 
-router.post("/auth/register", async function (req, res) {
+router.post("/register", async function (req, res) {
   try {
     const { username, email, password , isStreamer } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -24,7 +24,7 @@ router.post("/auth/register", async function (req, res) {
 
 
 
-router.post("/auth/login", async function (req,res) {
+router.post("/login", async function (req,res) {
     try{
 
     const { email, password } = req.body;

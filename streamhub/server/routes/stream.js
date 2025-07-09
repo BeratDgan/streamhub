@@ -23,7 +23,7 @@ router.post("/start" ,verifyToken, async (req, res) => {
                 title: req.body.title || "Untitled Stream",
                 startedAt: new Date(),
                 isLive: true,
-                streamKey: user.streamKey
+                streamKey: req.user.streamKey
         });
 
         await stream.save();
@@ -72,5 +72,32 @@ router.get("/active", async(req,res)=>{
     }
 })
 
+router.put("/update-title", verifyToken, async (req, res) => {
+    try {
+        const { title } = req.body;
+        
+        if (!title || !title.trim()) {
+            return res.status(400).json({ message: 'Title is required' });
+        }
+
+        // Update the user's current live stream title
+        const stream = await Stream.findOneAndUpdate(
+            { user: req.user.id, isLive: true },
+            { title: title.trim() },
+            { new: true }
+        );
+
+        if (!stream) {
+            return res.status(404).json({ message: 'No active stream found' });
+        }
+
+        res.json({
+            message: "Stream title updated successfully",
+            stream
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 export default router;
