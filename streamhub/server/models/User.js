@@ -31,6 +31,10 @@ const userSchema = new mongoose.Schema({
         type:String,
         unique:true,
         trim:true,
+    },
+    isLive:{
+        type:Boolean,
+        default:false
     }
 
 });

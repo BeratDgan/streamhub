@@ -63,6 +63,7 @@ nms.on('prePublish', async (id, StreamPath, args) => {
       { user: user._id },
       { 
         user: user._id,
+        streamKey: streamKey,
         title: "Live Stream",
         startedAt: new Date(),
         isLive: true 

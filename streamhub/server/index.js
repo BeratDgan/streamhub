@@ -6,6 +6,8 @@ import authRoutes from './routes/auth.js';
 import profileRoutes from './routes/profile.js';
 import streamRoutes from './routes/stream.js';
 import streamKeyRoutes from './routes/stream-key.js';
+// Import NMS for stream handling
+import './nms.js';
 
 dotenv.config();
 
@@ -14,8 +16,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api', profileRoutes);
-app.use('/api',authRoutes);
-app.use('/api', streamRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/stream', streamRoutes);
 app.use('/api', streamKeyRoutes);
 
 connectDB();
